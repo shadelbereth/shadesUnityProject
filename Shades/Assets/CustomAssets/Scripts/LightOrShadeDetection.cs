@@ -13,7 +13,6 @@ public class LightOrShadeDetection : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         RaycastHit hit;
-        // Debug.DrawRay(transform.position, player.transform.position - transform.position, Color.red);
         if (Physics.Raycast(transform.position, player.transform.position - transform.position, out hit, 10f)) {
             if (player.transform == hit.collider.transform) {
                 player.GetComponent<PlayerManager>().DetectLight();

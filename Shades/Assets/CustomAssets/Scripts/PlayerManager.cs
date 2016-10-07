@@ -6,26 +6,31 @@ public class PlayerManager : MonoBehaviour {
     bool shadowing;
     bool lighting;
     bool passingWall;
-    bool following;
+    // bool following;
     float recentDetection;
     float recentPassing;
-    Transform shadeFollowed;
-    Transform projectingLight;
+    // Transform shadeFollowed;
+    // Transform projectingLight;
 
 	// Use this for initialization
 	void Start () {
 	   shadowing = false;
-       following = false;
+       // following = false;
+       // ParticleSystem part = GetComponent<ParticleSystem>();
+       // part.shape.shapeType = ParticleSystemShapeType.Mesh;
+       // part.shape.mesh = GetComponent<MeshFilter>().mesh;
 	}
 	
 	// Update is called once per frame
 	void Update () {
         if (lighting) {
     	   if (recentDetection > 0) {
-                print("burn");
+                if (shadowing) {
+                    print("burn");
+                }
                 recentDetection -= Time.deltaTime;
            } else {
-                    lighting = false;
+                lighting = false;
            }
         }
         if (passingWall) {
@@ -33,7 +38,7 @@ public class PlayerManager : MonoBehaviour {
                 print("wall");
                 recentPassing -= Time.deltaTime;
            } else {
-                    passingWall = false;
+                passingWall = false;
            }
         }
         // if (following) {
@@ -62,10 +67,10 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public void ActualShade (Transform shade, Transform light) {
-        if (shadeFollowed == null || Vector3.Distance(transform.position, light.position) <= Vector3.Distance(transform.position, projectingLight.position) || Vector3.Distance(transform.position, shade.position) <= Vector3.Distance(transform.position, shadeFollowed.position)) {
-            shadeFollowed = shade;
-            projectingLight = light;
-        }
+    //     if (shadeFollowed == null || Vector3.Distance(transform.position, light.position) <= Vector3.Distance(transform.position, projectingLight.position) || Vector3.Distance(transform.position, shade.position) <= Vector3.Distance(transform.position, shadeFollowed.position)) {
+    //         shadeFollowed = shade;
+    //         projectingLight = light;
+    //     }
     }
 
     public void DetectWall () {
@@ -81,22 +86,29 @@ public class PlayerManager : MonoBehaviour {
     }
 
     void SwitchForm () {
-        if (shadowing && ! passingWall && ! following) {
+        if (shadowing && !passingWall) {
             shadowing = false;
-            // GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            gameObject.layer = 0;
+            GetComponent<NavMeshAgent>().obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+            GetComponent<NavMeshAgent>().avoidancePriority = 50;
+
         } else if (! lighting) {
             shadowing = true;
-            // GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            gameObject.layer = 8;
+            GetComponent<NavMeshAgent>().obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+            GetComponent<NavMeshAgent>().avoidancePriority = 99;
         }
     }
 
-    void FollowShade () {
-        if (shadowing) {
-            following = true;
-        }
-    }
+    // void FollowShade () {
+    //     if (shadowing) {
+    //         following = true;
+    //     }
+    // }
 
-    void Unfollow () {
-        following = false;
-    }
+    // void Unfollow () {
+    //     following = false;
+    // }
 }

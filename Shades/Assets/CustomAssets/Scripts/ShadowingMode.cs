@@ -18,6 +18,7 @@ public class ShadowingMode : MonoBehaviour {
        if (render == null) {
             renderers = GetComponentsInChildren<Renderer>();
        }
+        Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
 	}
 	
 	// Update is called once per frame
@@ -32,17 +33,18 @@ public class ShadowingMode : MonoBehaviour {
     void GoShade () {
         if (! shadow) {
             shadow = true;
-            GetComponent<Collider>().isTrigger = true;
-            if (body != null) {
-                body.useGravity = false;
-            }
+            // GetComponent<Collider>().isTrigger = true;
+            // if (body != null) {
+            //     body.useGravity = false;
+            // }
+            Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), true);
             if (render != null) {
                 render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-                render.materials[0].SetColor("_Color", Color.black);
+                // render.materials[0].SetColor("_Color", Color.black);
             } else {
                 foreach (Renderer renderer in renderers) {
-                    // renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-                    renderer.materials[0].SetColor("_Color", Color.black);
+                    renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+                    // renderer.materials[0].SetColor("_Color", Color.black);
                 }
             }
         }
@@ -51,10 +53,11 @@ public class ShadowingMode : MonoBehaviour {
     void GoNormal () {
         if (shadow) {
             shadow = false;
-            GetComponent<Collider>().isTrigger = false;
-            if (body != null) {
-                body.useGravity = true;
-            }
+            // GetComponent<Collider>().isTrigger = false;
+            // if (body != null) {
+            //     body.useGravity = true;
+            // }
+            Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
             if (render != null) {
                 render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
                 render.materials[0].SetColor("_Color", Color.white);

@@ -3,17 +3,17 @@ using System.Collections;
 
 public class AICubic : MonoBehaviour {
 
-    NavMeshAgent agent;
-    public Transform wpGroup;
-    Transform[] wps;
-    Transform lastTarget;
+  NavMeshAgent agent;
+  public Transform wpGroup;
+  Transform[] wps;
+  Transform lastTarget;
 
 	// Use this for initialization
 	void Start () {
-       agent = GetComponent<NavMeshAgent>();
-       wps = wpGroup.GetComponentsInChildren<Transform>();
-       lastTarget = SelectDestination();
-       agent.SetDestination(lastTarget.position);
+    agent = GetComponent<NavMeshAgent>();
+    wps = wpGroup.GetComponentsInChildren<Transform>();
+    lastTarget = SelectDestination();
+    agent.SetDestination(lastTarget.position);
 	}
 	
 	// Update is called once per frame
@@ -21,18 +21,18 @@ public class AICubic : MonoBehaviour {
 	
 	}
 
-    void OnTriggerEnter (Collider other) {
-        if (other.transform == lastTarget) {
-            Transform destination = SelectDestination();
-            while (destination == lastTarget) {
-                destination = SelectDestination();
-            }
-       agent.SetDestination(destination.position);
-            lastTarget = destination;
-        }
-    } 
-
-    Transform SelectDestination () {
-        return wps[Random.Range(1, wps.Length)];
+  void OnTriggerEnter (Collider other) {
+    if (other.transform == lastTarget) {
+      Transform destination = SelectDestination();
+      while (destination == lastTarget) {
+          destination = SelectDestination();
+      }
+      agent.SetDestination(destination.position);
+      lastTarget = destination;
     }
+  } 
+
+  Transform SelectDestination () {
+    return wps[Random.Range(1, wps.Length)];
+  }
 }
