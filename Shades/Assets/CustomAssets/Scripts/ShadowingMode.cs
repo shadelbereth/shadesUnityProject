@@ -19,6 +19,16 @@ public class ShadowingMode : MonoBehaviour {
             renderers = GetComponentsInChildren<Renderer>();
        }
         Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
+       var shape = GetComponent<ParticleSystem>().shape;
+       shape.enabled = true;
+       shape.shapeType = ParticleSystemShapeType.MeshRenderer;
+       shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
+       shape.meshRenderer = GetComponent<MeshRenderer>();
+       GetComponent<ParticleSystem>().startSpeed = 0.1f;
+       GetComponent<ParticleSystem>().startLifetime = 1f;
+       Color color = Color.black;
+       color.a = 0.6f;
+       GetComponent<ParticleSystem>().startColor = color;
 	}
 	
 	// Update is called once per frame
@@ -38,6 +48,9 @@ public class ShadowingMode : MonoBehaviour {
             //     body.useGravity = false;
             // }
             Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), true);
+            var emission = GetComponent<ParticleSystem>().emission;
+            emission.enabled = true;
+            emission.rate = 50;
             if (render != null) {
                 render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
                 // render.materials[0].SetColor("_Color", Color.black);
@@ -57,6 +70,9 @@ public class ShadowingMode : MonoBehaviour {
             // if (body != null) {
             //     body.useGravity = true;
             // }
+            var emission = GetComponent<ParticleSystem>().emission;
+            emission.enabled = true;
+            emission.rate = 0;
             Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
             if (render != null) {
                 render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;

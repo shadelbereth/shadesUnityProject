@@ -16,9 +16,14 @@ public class PlayerManager : MonoBehaviour {
 	void Start () {
 	   shadowing = false;
        // following = false;
-       // ParticleSystem part = GetComponent<ParticleSystem>();
-       // part.shape.shapeType = ParticleSystemShapeType.Mesh;
-       // part.shape.mesh = GetComponent<MeshFilter>().mesh;
+       var shape = GetComponent<ParticleSystem>().shape;
+       shape.enabled = true;
+       shape.shapeType = ParticleSystemShapeType.MeshRenderer;
+       shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
+       shape.meshRenderer = GetComponent<MeshRenderer>();
+       GetComponent<ParticleSystem>().startSpeed = 0.1f;
+       GetComponent<ParticleSystem>().startLifetime = 1f;
+       GetComponent<ParticleSystem>().startColor = Color.black;
 	}
 	
 	// Update is called once per frame
@@ -89,6 +94,9 @@ public class PlayerManager : MonoBehaviour {
         if (shadowing && !passingWall) {
             shadowing = false;
             GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            var emission = GetComponent<ParticleSystem>().emission;
+            emission.enabled = true;
+            emission.rate = 0;
             gameObject.layer = 0;
             GetComponent<NavMeshAgent>().obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
             GetComponent<NavMeshAgent>().avoidancePriority = 50;
@@ -96,6 +104,9 @@ public class PlayerManager : MonoBehaviour {
         } else if (! lighting) {
             shadowing = true;
             GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            var emission = GetComponent<ParticleSystem>().emission;
+            emission.enabled = true;
+            emission.rate = 50;
             gameObject.layer = 8;
             GetComponent<NavMeshAgent>().obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
             GetComponent<NavMeshAgent>().avoidancePriority = 99;
