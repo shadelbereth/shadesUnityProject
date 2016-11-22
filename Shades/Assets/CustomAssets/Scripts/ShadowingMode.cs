@@ -5,30 +5,42 @@ public class ShadowingMode : MonoBehaviour {
 
     PlayerManager player;
     bool shadow;
-    Rigidbody body;
+    // Rigidbody body;
     Renderer render;
     Renderer[] renderers;
+    Color color;
+    float size;
+    float particleBySize;
 
 	// Use this for initialization
 	void Start () {
 	   player = GameObject.Find("Player").GetComponent<PlayerManager>();
        shadow = false;
-       body = GetComponent<Rigidbody>();
+       // body = GetComponent<Rigidbody>();
        render = GetComponent<Renderer>();
        if (render == null) {
             renderers = GetComponentsInChildren<Renderer>();
        }
-        Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
+        // Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
        var shape = GetComponent<ParticleSystem>().shape;
        shape.enabled = true;
-       shape.shapeType = ParticleSystemShapeType.MeshRenderer;
        shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
-       shape.meshRenderer = GetComponent<MeshRenderer>();
+       if (GetComponent<MeshRenderer>() != null) {
+            shape.shapeType = ParticleSystemShapeType.MeshRenderer;
+            shape.meshRenderer = GetComponent<MeshRenderer>();
+       } else {
+            shape.shapeType = ParticleSystemShapeType.SkinnedMeshRenderer;
+            shape.skinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
+       }
        GetComponent<ParticleSystem>().startSpeed = 0.1f;
-       GetComponent<ParticleSystem>().startLifetime = 1f;
-       Color color = Color.black;
-       color.a = 0.6f;
+       GetComponent<ParticleSystem>().startLifetime = 0.7f;
+       color = Color.black;
+       color.a = 0.5f;
        GetComponent<ParticleSystem>().startColor = color;
+       GetComponent<ParticleSystem>().scalingMode = ParticleSystemScalingMode.Shape;
+       Vector3 volume = render.bounds.size;
+       size = volume.x * volume.z * volume.y;
+       particleBySize = 150;
 	}
 	
 	// Update is called once per frame
@@ -47,17 +59,17 @@ public class ShadowingMode : MonoBehaviour {
             // if (body != null) {
             //     body.useGravity = false;
             // }
-            Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), true);
+            // Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), true);
             var emission = GetComponent<ParticleSystem>().emission;
             emission.enabled = true;
-            emission.rate = 50;
+            emission.rate = size * particleBySize;
             if (render != null) {
                 render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-                // render.materials[0].SetColor("_Color", Color.black);
+                // render.materials[0].SetColor("_Color", color);
             } else {
                 foreach (Renderer renderer in renderers) {
                     renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-                    // renderer.materials[0].SetColor("_Color", Color.black);
+                    // renderer.materials[0].SetColor("_Color", color);
                 }
             }
         }
@@ -73,22 +85,22 @@ public class ShadowingMode : MonoBehaviour {
             var emission = GetComponent<ParticleSystem>().emission;
             emission.enabled = true;
             emission.rate = 0;
-            Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
+            // Physics.IgnoreCollision(GetComponent<Collider>(), player.GetComponent<Collider>(), false);
             if (render != null) {
                 render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-                render.materials[0].SetColor("_Color", Color.white);
+                // render.materials[0].SetColor("_Color", Color.white);
             } else {
                 foreach (Renderer renderer in renderers) {
-                    // renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-                    renderer.materials[0].SetColor("_Color", Color.white);
+                    renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                    // renderer.materials[0].SetColor("_Color", Color.white);
                 }
             }
         }
     }
 
-    void OnTriggerStay (Collider other) {
-        if (other.tag == "Player") {
-            other.GetComponent<PlayerManager>().DetectWall();
-        }
-    }
+    // void OnTriggerStay (Collider other) {
+    //     if (other.tag == "Player") {
+    //         other.GetComponent<PlayerManager>().DetectWall();
+    //     }
+    // }
 }

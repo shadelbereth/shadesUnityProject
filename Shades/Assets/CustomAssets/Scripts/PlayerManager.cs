@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerManager : MonoBehaviour {
 
@@ -11,6 +12,14 @@ public class PlayerManager : MonoBehaviour {
     float recentPassing;
     // Transform shadeFollowed;
     // Transform projectingLight;
+    float burning;
+    float cooldown;
+    public Image screenColor;
+    Color actualColor = Color.clear;
+    Color color1 = new Color(1f, 0f, 0f, 0.1f);
+    Color color2 = new Color(1f, 0f, 0f, 0.3f);
+    Color color3 = new Color(1f, 0f, 0f, 0.4f);
+    Color cooldownColor = new Color(1f, 0f, 1f, 0.05f);
 
 	// Use this for initialization
 	void Start () {
@@ -24,6 +33,8 @@ public class PlayerManager : MonoBehaviour {
        GetComponent<ParticleSystem>().startSpeed = 0.1f;
        GetComponent<ParticleSystem>().startLifetime = 1f;
        GetComponent<ParticleSystem>().startColor = Color.black;
+       burning = 0;
+       cooldown = 0;
 	}
 	
 	// Update is called once per frame
@@ -31,12 +42,32 @@ public class PlayerManager : MonoBehaviour {
         if (lighting) {
     	   if (recentDetection > 0) {
                 if (shadowing) {
-                    print("burn");
+                    burning += Time.deltaTime;
+                    screenColor.color = Color.Lerp (screenColor.color, Color.clear, 1f * Time.deltaTime);
+                    if (burning > 3) {
+                        EjectFromShade();
+                    } else if (burning > 2.5) {
+                        ChangeColorFilter(color3);
+                    } else if (burning > 1.5) {
+                        ChangeColorFilter(color2);
+                    } else if (burning > 0.5) {
+                        ChangeColorFilter(color1);
+                    }
                 }
                 recentDetection -= Time.deltaTime;
            } else {
                 lighting = false;
+                ChangeColorFilter(Color.clear);
            }
+        } else if (burning > 0) {
+            burning -= 2 * Time.deltaTime;
+            if (burning < 0) {
+                burning = 0;
+            }
+        }
+        if (cooldown > 0) {
+            cooldown -= Time.deltaTime;
+            screenColor.color = Color.Lerp(Color.clear, cooldownColor, cooldown);
         }
         if (passingWall) {
            if (recentPassing > 0) {
@@ -66,6 +97,13 @@ public class PlayerManager : MonoBehaviour {
         // }
 	}
 
+    void ChangeColorFilter (Color color) {
+        if (actualColor != color) {
+            actualColor = color;
+            screenColor.color = color;
+        }
+    }
+
     public void DetectLight () {
         lighting = true;
         recentDetection = Time.deltaTime;
@@ -90,26 +128,33 @@ public class PlayerManager : MonoBehaviour {
         return false;
     }
 
+    void EjectFromShade () {
+        ChangeColorFilter(Color.clear);
+        shadowing = false;
+        burning = 0;
+        cooldown = 9;
+        GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        var emission = GetComponent<ParticleSystem>().emission;
+        emission.enabled = true;
+        emission.rate = 0;
+    }
+
     void SwitchForm () {
         if (shadowing && !passingWall) {
+            ChangeColorFilter(Color.clear);
             shadowing = false;
+            burning = 0;
+            cooldown = 3;
             GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             var emission = GetComponent<ParticleSystem>().emission;
             emission.enabled = true;
             emission.rate = 0;
-            gameObject.layer = 0;
-            GetComponent<NavMeshAgent>().obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
-            GetComponent<NavMeshAgent>().avoidancePriority = 50;
-
-        } else if (! lighting) {
+        } else if (! lighting && cooldown <= 0) {
             shadowing = true;
             GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             var emission = GetComponent<ParticleSystem>().emission;
             emission.enabled = true;
             emission.rate = 50;
-            gameObject.layer = 8;
-            GetComponent<NavMeshAgent>().obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-            GetComponent<NavMeshAgent>().avoidancePriority = 99;
         }
     }
 
