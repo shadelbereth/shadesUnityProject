@@ -23,16 +23,16 @@ public class PlayerManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	   shadowing = false;
-       // following = false;
-       var shape = GetComponent<ParticleSystem>().shape;
-       shape.enabled = true;
-       shape.shapeType = ParticleSystemShapeType.MeshRenderer;
-       shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
-       shape.meshRenderer = GetComponent<MeshRenderer>();
-       GetComponent<ParticleSystem>().startSpeed = 0.1f;
-       GetComponent<ParticleSystem>().startLifetime = 1f;
-       GetComponent<ParticleSystem>().startColor = Color.black;
+	   // shadowing = false;
+    //    // following = false;
+    //    var shape = GetComponent<ParticleSystem>().shape;
+    //    shape.enabled = true;
+    //    shape.shapeType = ParticleSystemShapeType.MeshRenderer;
+    //    shape.meshShapeType = ParticleSystemMeshShapeType.Triangle;
+    //    shape.meshRenderer = GetComponent<MeshRenderer>();
+    //    GetComponent<ParticleSystem>().startSpeed = 0.1f;
+    //    GetComponent<ParticleSystem>().startLifetime = 1f;
+    //    GetComponent<ParticleSystem>().startColor = Color.black;
        burning = 0;
        cooldown = 0;
 	}
@@ -133,10 +133,10 @@ public class PlayerManager : MonoBehaviour {
         shadowing = false;
         burning = 0;
         cooldown = 9;
-        GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-        var emission = GetComponent<ParticleSystem>().emission;
-        emission.enabled = true;
-        emission.rate = 0;
+        // GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        // var emission = GetComponent<ParticleSystem>().emission;
+        // emission.enabled = true;
+        // emission.rate = 0;
     }
 
     void SwitchForm () {
@@ -145,16 +145,16 @@ public class PlayerManager : MonoBehaviour {
             shadowing = false;
             burning = 0;
             cooldown = 3;
-            GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-            var emission = GetComponent<ParticleSystem>().emission;
-            emission.enabled = true;
-            emission.rate = 0;
+            // GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            // var emission = GetComponent<ParticleSystem>().emission;
+            // emission.enabled = true;
+            // emission.rate = 0;
         } else if (! lighting && cooldown <= 0) {
             shadowing = true;
-            GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            var emission = GetComponent<ParticleSystem>().emission;
-            emission.enabled = true;
-            emission.rate = 50;
+            // GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            // var emission = GetComponent<ParticleSystem>().emission;
+            // emission.enabled = true;
+            // emission.rate = 50;
         }
     }
 
