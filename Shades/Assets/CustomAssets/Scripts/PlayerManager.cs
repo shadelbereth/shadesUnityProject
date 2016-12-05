@@ -71,7 +71,6 @@ public class PlayerManager : MonoBehaviour {
         }
         if (passingWall) {
            if (recentPassing > 0) {
-                print("wall");
                 recentPassing -= Time.deltaTime;
            } else {
                 passingWall = false;
@@ -156,6 +155,11 @@ public class PlayerManager : MonoBehaviour {
             // emission.enabled = true;
             // emission.rate = 50;
         }
+    }
+
+    public void Hurt () {
+        print("hit");
+        // screenColor.color = color3;
     }
 
     // void FollowShade () {

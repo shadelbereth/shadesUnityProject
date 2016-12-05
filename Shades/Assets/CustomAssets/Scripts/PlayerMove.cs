@@ -6,6 +6,7 @@ public class PlayerMove : MonoBehaviour {
 
   public float speed = 6f;
   Rigidbody playerRigidbody;
+  PlayerManager manager;
   ThirdPersonCharacter thirdPersonCharacter;
 
   // private NavMeshAgent agent;
@@ -14,16 +15,28 @@ public class PlayerMove : MonoBehaviour {
   void Start () {
      // agent = GetComponent<NavMeshAgent>();
     playerRigidbody = GetComponent<Rigidbody>();
+    manager = GetComponent<PlayerManager>();
     thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
   }
   
   // Update is called once per frame
-  void Update () {
+  void FixedUpdate () {
+     bool crouch;
+     if (manager.IsShadowing()) {
+        crouch = true;
+        thirdPersonCharacter.m_MoveSpeedMultiplier = 1.5f;
+        thirdPersonCharacter.m_AnimSpeedMultiplier = 1.5f;
+     } else {
+        crouch = false;
+        thirdPersonCharacter.m_MoveSpeedMultiplier = 1f;
+        thirdPersonCharacter.m_AnimSpeedMultiplier = 1f;
+     }
      if (Input.GetMouseButton(0)) {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         Physics.Raycast(ray, out hit);
         // agent.destination = hit.point;
+
 
         Vector3 playerDirection = hit.point - transform.position;
         if (thirdPersonCharacter == null) {
@@ -33,11 +46,11 @@ public class PlayerMove : MonoBehaviour {
         } else {
           playerDirection.y = transform.position.y;
           playerDirection = playerDirection.normalized;
-          thirdPersonCharacter.Move(playerDirection, false, false);
+          thirdPersonCharacter.Move(playerDirection, crouch, false);
         }
         // transform.position = transform.position + playerDirection;
      } else {
-        thirdPersonCharacter.Move(Vector3.zero, false, false);
+        thirdPersonCharacter.Move(Vector3.zero, crouch, false);
      }
   }
 }

@@ -15,6 +15,7 @@ public class AIWatchman : MonoBehaviour {
     bool chasing;
     bool losing;
     float lookingFor;
+    float hiting;
 
 	// Use this for initialization
 	void Start () {
@@ -33,6 +34,7 @@ public class AIWatchman : MonoBehaviour {
        chasing = false;
        losing = false;
        lookingFor = 0;
+       hiting = 0;
 	}
 	
 	// Update is called once per frame
@@ -72,6 +74,9 @@ public class AIWatchman : MonoBehaviour {
                 }
             }
         }
+        if (hiting > 0) {
+            hiting -= Time.deltaTime;
+        }
 	}
 
     void OnTriggerEnter (Collider other) {
@@ -84,6 +89,15 @@ public class AIWatchman : MonoBehaviour {
             lastTarget = destination;
         }
     } 
+
+    void OnCollisionEnter (Collision other) {
+        if (other.gameObject.tag == "Player") {
+            if (hiting <= 0) {
+                hiting = 1f;
+                player.GetComponent<PlayerManager>().Hurt();
+            }
+        }
+    }
 
     Transform SelectDestination () {
         return wps[Random.Range(1, wps.Length)];
