@@ -9,7 +9,7 @@ public class CameraManager : MonoBehaviour {
     public float smoothing = 5f;
     Vector3 offset;
     BlurOptimized blur;
-    SepiaTone sepia;
+    // SepiaTone sepia;
 
     // Use this for initialization
     void Start () {
@@ -17,8 +17,8 @@ public class CameraManager : MonoBehaviour {
        offset = transform.position - player.position;
        blur = GetComponent<BlurOptimized>();
        blur.enabled = false;
-       sepia = GetComponent<SepiaTone>();
-       sepia.enabled = false;
+       // sepia = GetComponent<SepiaTone>();
+       // sepia.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -47,11 +47,11 @@ public class CameraManager : MonoBehaviour {
         StartCoroutine("Bluring");
     }
 
-    public void Sepia (bool status) {
-        if (sepia.enabled != status) {
-            sepia.enabled = status;
-        }
-    }
+    // public void Sepia (bool status) {
+    //     if (sepia.enabled != status) {
+    //         sepia.enabled = status;
+    //     }
+    // }
 
     IEnumerator Bluring () {
         blur.blurIterations = 4;

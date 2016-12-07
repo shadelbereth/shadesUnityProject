@@ -6,6 +6,7 @@ public class PlayerMove : MonoBehaviour {
 
   public float speed = 6f;
   bool alive;
+  bool turnedLittle;
   Rigidbody playerRigidbody;
   PlayerManager manager;
   ThirdPersonCharacter thirdPersonCharacter;
@@ -19,20 +20,29 @@ public class PlayerMove : MonoBehaviour {
     manager = GetComponent<PlayerManager>();
     thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
     alive = true;
+    turnedLittle = false;
   }
   
   // Update is called once per frame
   void FixedUpdate () {
      if (alive) {
-       bool crouch;
+       // bool crouch;
        if (manager.IsShadowing()) {
-          crouch = true;
-          thirdPersonCharacter.m_MoveSpeedMultiplier = 1.7f;
-          thirdPersonCharacter.m_AnimSpeedMultiplier = 1.7f;
+          // crouch = false;
+          // thirdPersonCharacter.m_MoveSpeedMultiplier = 1.2f;
+          // thirdPersonCharacter.m_AnimSpeedMultiplier = 1.2f;
+          if (!turnedLittle) {
+            turnedLittle = true;
+            transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+          }
        } else {
-          crouch = false;
-          thirdPersonCharacter.m_MoveSpeedMultiplier = 1f;
-          thirdPersonCharacter.m_AnimSpeedMultiplier = 1f;
+          // crouch = false;
+          // thirdPersonCharacter.m_MoveSpeedMultiplier = 1f;
+          // thirdPersonCharacter.m_AnimSpeedMultiplier = 1f;
+          if (turnedLittle) {
+            turnedLittle = false;
+            transform.localScale = new Vector3(1f, 1f, 1f);
+          }
        }
        if (Input.GetMouseButton(0)) {
           Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -49,11 +59,11 @@ public class PlayerMove : MonoBehaviour {
           } else {
             playerDirection.y = transform.position.y;
             playerDirection = playerDirection.normalized;
-            thirdPersonCharacter.Move(playerDirection, crouch, false);
+            thirdPersonCharacter.Move(playerDirection, false, false);
           }
           // transform.position = transform.position + playerDirection;
        } else {
-          thirdPersonCharacter.Move(Vector3.zero, crouch, false);
+          thirdPersonCharacter.Move(Vector3.zero, false, false);
        }
     } else {
       thirdPersonCharacter.Move(Vector3.zero, true, false);

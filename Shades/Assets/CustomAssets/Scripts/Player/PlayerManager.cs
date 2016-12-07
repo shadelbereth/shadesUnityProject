@@ -23,14 +23,14 @@ public class PlayerManager : MonoBehaviour {
     Color color2 = new Color(1f, 0f, 0f, 0.3f);
     Color color3 = new Color(1f, 0f, 0f, 0.4f);
     Color cooldownColor = new Color(1f, 0f, 1f, 0.05f);
-    CameraManager camera;
+    CameraManager cameraManager;
 
 	// Use this for initialization
 	void Start () {
        burning = 0;
        cooldown = 0;
        capturing = 0;
-       camera = Camera.main.GetComponent<CameraManager>();
+       cameraManager = Camera.main.GetComponent<CameraManager>();
 	}
 	
 	// Update is called once per frame
@@ -65,7 +65,7 @@ public class PlayerManager : MonoBehaviour {
             cooldown -= Time.deltaTime;
             screenColor.color = Color.Lerp(Color.clear, cooldownColor, cooldown);
         } else if (!shadowing) {
-            // camera.Sepia(false);
+            // cameraManager.Sepia(false);
         }
         if (passingWall) {
            if (recentPassing > 0) {
@@ -85,7 +85,7 @@ public class PlayerManager : MonoBehaviour {
         //         }
         //     }
         // }
-        if (Input.GetKeyDown(KeyCode.LeftShift)) {
+        if (Input.GetKeyDown(KeyCode.Space)) {
             SwitchForm();
         }
         // if (Input.GetKeyDown(KeyCode.Q)) {
@@ -143,13 +143,13 @@ public class PlayerManager : MonoBehaviour {
             cooldown = 3;
         } else if (! lighting && cooldown <= 0) {
             shadowing = true;
-            // camera.Sepia(true);
+            // cameraManager.Sepia(true);
         }
     }
 
     public void Hurt () {
         capturing += 5;
-        camera.Blur();
+        cameraManager.Blur();
         if (capturing > 15) {
             StartCoroutine("Die");
         }
