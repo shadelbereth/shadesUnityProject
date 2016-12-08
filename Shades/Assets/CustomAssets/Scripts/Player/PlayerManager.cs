@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour {
     bool shadowing;
     bool lighting;
     bool passingWall;
+    bool alive;
     // bool following;
     float recentDetection;
     float recentPassing;
@@ -17,6 +18,7 @@ public class PlayerManager : MonoBehaviour {
     float cooldown;
     float capturing;
     public Image screenColor;
+    public Slider capturingBar;
     public string defeatScene;
     Color actualColor = Color.clear;
     Color color1 = new Color(1f, 0f, 0f, 0.1f);
@@ -27,6 +29,7 @@ public class PlayerManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+       alive = true;
        burning = 0;
        cooldown = 0;
        capturing = 0;
@@ -35,47 +38,56 @@ public class PlayerManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (lighting) {
-    	   if (recentDetection > 0) {
-                if (shadowing) {
-                    burning += Time.deltaTime;
-                    screenColor.color = Color.Lerp (screenColor.color, Color.clear, 1f * Time.deltaTime);
-                    if (burning > 3) {
-                        EjectFromShade();
-                    } else if (burning > 2.5) {
-                        ChangeColorFilter(color3);
-                    } else if (burning > 1.5) {
-                        ChangeColorFilter(color2);
-                    } else if (burning > 0.5) {
-                        ChangeColorFilter(color1);
+        if (alive) {
+            if (lighting) {
+        	   if (recentDetection > 0) {
+                    if (shadowing) {
+                        burning += Time.deltaTime;
+                        screenColor.color = Color.Lerp (screenColor.color, Color.clear, 1f * Time.deltaTime);
+                        if (burning > 3) {
+                            EjectFromShade();
+                        } else if (burning > 2.5) {
+                            ChangeColorFilter(color3);
+                        } else if (burning > 1.5) {
+                            ChangeColorFilter(color2);
+                        } else if (burning > 0.5) {
+                            ChangeColorFilter(color1);
+                        }
                     }
+                    recentDetection -= Time.deltaTime;
+               } else {
+                    lighting = false;
+                    ChangeColorFilter(Color.clear);
+               }
+            } else if (burning > 0) {
+                burning -= 2 * Time.deltaTime;
+                if (burning < 0) {
+                    burning = 0;
                 }
-                recentDetection -= Time.deltaTime;
-           } else {
-                lighting = false;
-                ChangeColorFilter(Color.clear);
-           }
-        } else if (burning > 0) {
-            burning -= 2 * Time.deltaTime;
-            if (burning < 0) {
-                burning = 0;
             }
-        }
-        if (cooldown > 0) {
-            cooldown -= Time.deltaTime;
-            screenColor.color = Color.Lerp(Color.clear, cooldownColor, cooldown);
-        } else if (!shadowing) {
-            // cameraManager.Sepia(false);
-        }
-        if (passingWall) {
-           if (recentPassing > 0) {
-                recentPassing -= Time.deltaTime;
-           } else {
-                passingWall = false;
-           }
-        }
-        if (capturing > 0) {
-            capturing -= Time.deltaTime;
+            if (cooldown > 0) {
+                cooldown -= Time.deltaTime;
+                screenColor.color = Color.Lerp(Color.clear, cooldownColor, cooldown);
+            } else if (!shadowing) {
+                // cameraManager.Sepia(false);
+            }
+            if (passingWall) {
+               if (recentPassing > 0) {
+                    recentPassing -= Time.deltaTime;
+               } else {
+                    passingWall = false;
+               }
+            }
+            if (capturing > 0) {
+                capturingBar.gameObject.SetActive(true);
+                capturing -= Time.deltaTime;
+                capturingBar.value = capturing;
+            } else {
+                capturingBar.gameObject.SetActive(false);
+            }
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                SwitchForm();
+            }
         }
         // if (following) {
         //     RaycastHit hit;
@@ -85,9 +97,6 @@ public class PlayerManager : MonoBehaviour {
         //         }
         //     }
         // }
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            SwitchForm();
-        }
         // if (Input.GetKeyDown(KeyCode.Q)) {
         //     if (following) {
         //         Unfollow();
@@ -122,10 +131,11 @@ public class PlayerManager : MonoBehaviour {
     }
 
     public bool IsShadowing () {
-        if (shadowing) {
-            return true;
-        }
-        return false;
+        return shadowing;
+    }
+
+    public bool IsAlive () {
+        return alive;
     }
 
     void EjectFromShade () {
@@ -156,7 +166,9 @@ public class PlayerManager : MonoBehaviour {
     }
 
     IEnumerator Die () {
-        GetComponent<PlayerMove>().Fall();
+        alive = false;
+        capturing = 15;
+        capturingBar.value = capturing;
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene(defeatScene);
     }

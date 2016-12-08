@@ -5,7 +5,6 @@ using UnityStandardAssets.Characters.ThirdPerson;
 public class PlayerMove : MonoBehaviour {
 
   public float speed = 6f;
-  bool alive;
   bool turnedLittle;
   Rigidbody playerRigidbody;
   PlayerManager manager;
@@ -19,13 +18,12 @@ public class PlayerMove : MonoBehaviour {
     playerRigidbody = GetComponent<Rigidbody>();
     manager = GetComponent<PlayerManager>();
     thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
-    alive = true;
     turnedLittle = false;
   }
   
   // Update is called once per frame
   void FixedUpdate () {
-     if (alive) {
+     if (manager.IsAlive()) {
        // bool crouch;
        if (manager.IsShadowing()) {
           // crouch = false;
@@ -67,12 +65,8 @@ public class PlayerMove : MonoBehaviour {
        }
     } else {
       thirdPersonCharacter.Move(Vector3.zero, true, false);
+      playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
       Camera.main.GetComponent<CameraManager>().Blur();
     }
-  }
-
-  public void Fall () {
-    alive = false;
-    playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
   }
 }
