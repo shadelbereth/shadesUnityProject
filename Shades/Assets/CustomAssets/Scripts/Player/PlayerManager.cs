@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour {
     // Transform projectingLight;
     float burning;
     float cooldown;
+    public float cooldownMax = 9;
     float capturing;
     public Image screenColor;
     public Slider capturingBar;
@@ -24,7 +25,7 @@ public class PlayerManager : MonoBehaviour {
     Color color1 = new Color(1f, 0f, 0f, 0.1f);
     Color color2 = new Color(1f, 0f, 0f, 0.3f);
     Color color3 = new Color(1f, 0f, 0f, 0.4f);
-    Color cooldownColor = new Color(1f, 0f, 1f, 0.05f);
+    Color cooldownColor = new Color(1f, 0f, 1f, 0.1f);
     CameraManager cameraManager;
 
 	// Use this for initialization
