@@ -135,6 +135,22 @@ public class PlayerManager : MonoBehaviour {
         return shadowing;
     }
 
+    public bool IsInTheLight () {
+        return recentDetection > 0;
+    }
+
+    public bool IsBurning () {
+        return burning > 0.5f;
+    }
+
+    public bool IsInCooldown () {
+        return cooldown > 0;
+    }
+
+    public bool IsBeingCaptured () {
+        return capturing > 0;
+    }
+
     public bool IsAlive () {
         return alive;
     }
