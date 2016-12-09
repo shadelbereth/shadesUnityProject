@@ -27,4 +27,11 @@ public class AutomaticDoor : MonoBehaviour {
             detectTime = 1f;
         }
     }
+
+    void OnTriggerEnter (Collider other) {
+        if (other.tag == "Ennemy") {
+            anim.SetBool("opened", true);
+            detectTime = 1f;
+        }
+    }
 }
