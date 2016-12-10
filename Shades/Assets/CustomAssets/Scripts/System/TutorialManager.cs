@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -37,7 +37,7 @@ public class TutorialManager : MonoBehaviour {
        waitingForCooldown = cooldownTutoriel;
        moveText = "KEEP MOUSE LEFT BUTTON DOWN TO MOVE";
        hideText = "THEY'RE CAPTURING YOU! RUN, GO HIDE IN THE SHADE";
-       turnShadeText = "PRESS SPACE TO TURN SHADE";
+       turnShadeText = "THEN PRESS SPACE TO TURN SHADE";
        lightRejectText = "IT HURTS! THE LIGHT HURTS!";
        cooldownText = "TURNING SHADE IS EXHAUSTING, IT TAKES TIME TO DO IT AGAIN. ESPECIALLY YOU DIDN'T CHOSE TO QUIT SHADES";
 	}

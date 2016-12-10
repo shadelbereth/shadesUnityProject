@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour {
     float capturing;
     public Image screenColor;
     public Slider capturingBar;
+    public Image ectoIcon;
     public string defeatScene;
     Color actualColor = Color.clear;
     Color color1 = new Color(1f, 0f, 0f, 0.1f);
@@ -41,6 +42,7 @@ public class PlayerManager : MonoBehaviour {
 	void Update () {
         if (alive) {
             if (lighting) {
+                ectoIcon.gameObject.SetActive(false);
         	   if (recentDetection > 0) {
                     if (shadowing) {
                         burning += Time.deltaTime;
@@ -60,10 +62,14 @@ public class PlayerManager : MonoBehaviour {
                     lighting = false;
                     ChangeColorFilter(Color.clear);
                }
-            } else if (burning > 0) {
-                burning -= 2 * Time.deltaTime;
-                if (burning < 0) {
-                    burning = 0;
+            } else {
+                ectoIcon.gameObject.SetActive(true);
+                ectoIcon.transform.GetChild(0).gameObject.SetActive(IsInCooldown());
+                if (burning > 0) {
+                    burning -= 2 * Time.deltaTime;
+                    if (burning < 0) {
+                        burning = 0;
+                    }
                 }
             }
             if (cooldown > 0) {
