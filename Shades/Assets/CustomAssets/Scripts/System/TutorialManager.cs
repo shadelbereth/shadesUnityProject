@@ -8,36 +8,30 @@ public class TutorialManager : MonoBehaviour {
     public bool moveTutorial = true;
     bool waitingForCapture;
     public bool hideTutorial = true;
-    public bool turnShadeTutorial = true;
     bool waitingForReject;
     public bool lightRejectTutorial = true;
     bool waitingForCooldown;
     public bool cooldownTutoriel = true;
     string moveText;
     string hideText;
-    string turnShadeText;
     string lightRejectText;
     string cooldownText;
 
+    public float fadingDelay = 1f;
     PlayerManager player;
-    float fadingTime = 2f;
+    float fadingTime;
     bool fading;
 
 	// Use this for initialization
 	void Start () {
        player = GameObject.FindWithTag("Player").GetComponent<PlayerManager>();
-       if (moveTutorial) {
-            tutorialText.text = moveText;
-       } else if (turnShadeTutorial) {
-            tutorialText.text = turnShadeText;
-       }
        fading = false;
+       fadingTime = fadingDelay;
        waitingForCapture = hideTutorial;
        waitingForReject = lightRejectTutorial;
        waitingForCooldown = cooldownTutoriel;
-       moveText = "KEEP MOUSE LEFT BUTTON DOWN TO MOVE";
-       hideText = "THEY'RE CAPTURING YOU! RUN, GO HIDE IN THE SHADE";
-       turnShadeText = "THEN PRESS SPACE TO TURN SHADE";
+       moveText = "TO MOVE, KEEP MOUSE LEFT BUTTON DOWN";
+       hideText = "THEY'RE CAPTURING YOU! RUN! TO TURN SHADE, GO HIDE IN THE SHADE THEN PRESS SPACE.";
        lightRejectText = "IT HURTS! THE LIGHT HURTS!";
        cooldownText = "TURNING SHADE IS EXHAUSTING, IT TAKES TIME TO DO IT AGAIN. ESPECIALLY YOU DIDN'T CHOSE TO QUIT SHADES";
 	}
@@ -57,26 +51,18 @@ public class TutorialManager : MonoBehaviour {
             waitingForCapture = !player.IsBeingCaptured();
        } else if (hideTutorial) {
             tutorialText.text = hideText;
-            if (!player.IsInTheLight()) {
-                fading = true;
-            }
-            if (fading) {
-                hideTutorial = FadeAfterDelay();
-            }
-       } else if (turnShadeTutorial) {
-            tutorialText.text = turnShadeText;
             if (player.IsShadowing()) {
                 fading = true;
             }
             if (fading) {
-                turnShadeTutorial = FadeAfterDelay();
+                hideTutorial = FadeAfterDelay();
             }
        } else if (waitingForReject) {
             tutorialText.text = "";
             waitingForReject = !player.IsBurning();
        } else if (lightRejectTutorial) {
             tutorialText.text = lightRejectText;
-            if (player.IsShadowing()) {
+            if (!player.IsBurning()) {
                 fading = true;
             }
             if (fading) {
@@ -84,12 +70,14 @@ public class TutorialManager : MonoBehaviour {
             }
        } else if (waitingForCooldown) {
             tutorialText.text = "";
-            waitingForReject = !player.IsInCooldown();
+            waitingForCooldown = !player.IsInCooldown();
        } else if (cooldownTutoriel) {
             tutorialText.text = cooldownText;
-            fading = true;
+            if (!player.IsInCooldown()) {
+                fading = true;
+            }
             if (fading) {
-                lightRejectTutorial = FadeAfterDelay();
+                cooldownTutoriel = FadeAfterDelay();
             }
        } else {
             tutorialText.text = "";
@@ -101,7 +89,7 @@ public class TutorialManager : MonoBehaviour {
             fadingTime -= Time.deltaTime;
             return true;
         }
-        fadingTime = 1f;
+        fadingTime = fadingDelay;
         fading = false;
         return false;
     }
