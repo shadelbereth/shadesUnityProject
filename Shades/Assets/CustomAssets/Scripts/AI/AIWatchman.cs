@@ -27,9 +27,9 @@ public class AIWatchman : MonoBehaviour {
        lastKnownPosition.gameObject.AddComponent<BoxCollider>();
        lastKnownPosition.GetComponent<BoxCollider>().size = new Vector3(1f,1f,1f);
        lastKnownPosition.GetComponent<Collider>().isTrigger = true;
-       lastKnownPosition.position = player.position;
        lastKnownPosition.parent = wpGroup;
 	   wps = wpGroup.GetComponentsInChildren<Transform>();
+       lastKnownPosition.position = new Vector3(player.position.x, wps[1].position.y, player.position.z);
        controller.target = SelectDestination();
        lastTarget = controller.target;
        chasing = false;
@@ -59,7 +59,7 @@ public class AIWatchman : MonoBehaviour {
                 losing = true;
                 character.m_MoveSpeedMultiplier = Mathf.Lerp(2f, 1f, losingTiming);
                 character.m_AnimSpeedMultiplier = Mathf.Lerp(2f, 1f, losingTiming);
-                lastKnownPosition.position = player.position;
+                lastKnownPosition.position = new Vector3(player.position.x, lastKnownPosition.position.y, player.position.z);
                 controller.target = lastKnownPosition;
             }
             if (lastSeen) {

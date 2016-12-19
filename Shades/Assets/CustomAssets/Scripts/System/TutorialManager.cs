@@ -6,6 +6,10 @@ public class TutorialManager : MonoBehaviour {
 
     public Text tutorialText;
     public bool moveTutorial = true;
+    bool moveTutorial2;
+    public bool escapeTutorial = true;
+    bool escapeTutorial2;
+    bool escapeTutorial3;
     bool waitingForCapture;
     public bool hideTutorial = true;
     bool waitingForReject;
@@ -13,6 +17,10 @@ public class TutorialManager : MonoBehaviour {
     bool waitingForCooldown;
     public bool cooldownTutoriel = true;
     string moveText;
+    string moveText2;
+    string escapeText;
+    string escapeText2;
+    string escapeText3;
     string hideText;
     string lightRejectText;
     string cooldownText;
@@ -26,36 +34,49 @@ public class TutorialManager : MonoBehaviour {
 	void Start () {
        player = GameObject.FindWithTag("Player").GetComponent<PlayerManager>();
        fading = false;
-       fadingTime = fadingDelay;
+       fadingTime = fadingDelay * 3;
+       moveTutorial2 = moveTutorial;
+       escapeTutorial2 = escapeTutorial;
+       escapeTutorial3 = escapeTutorial;
        waitingForCapture = hideTutorial;
        waitingForReject = lightRejectTutorial;
        waitingForCooldown = cooldownTutoriel;
-       moveText = "TO MOVE, KEEP MOUSE LEFT BUTTON DOWN";
-       hideText = "THEY'RE CAPTURING YOU! RUN! TO TURN SHADE, GO HIDE IN THE SHADE THEN PRESS SPACE.";
+       moveText = "WHERE AM I? I DON'T RECOGNIZE THIS PLACE.";
+       moveText2 = "[ TO MOVE KEEP MOUSE LEFT BUTTON DOWN ]";
+       escapeText = "IT LOOKS LIKE A PRISON. I COULD TRY TO BYPASS GUARDIANS THE NEXT TIME THEY COME IN...";
+       escapeText2 = "... OR I COULD TRICK THEM WITH MY SPECIAL GIFT.";
+       escapeText3 = "[ TO TURN SHADE PRESS SPACE WHILE HIDING IN THE SHADE ]";
        lightRejectText = "IT HURTS! THE LIGHT HURTS!";
-       cooldownText = "TURNING SHADE IS EXHAUSTING, IT TAKES TIME TO DO IT AGAIN. ESPECIALLY YOU DIDN'T CHOSE TO QUIT SHADES";
+       cooldownText = "TURNING SHADE IS EXHAUSTING, IT TAKES TIME TO DO IT AGAIN. ESPECIALLY WHEN THE LIGHT HAS EJECTED ME.";
+       hideText = "NO, THEY WON'T CAPTURE ME AGAIN! I MUST RUN INTO THE SHADE.";
 	}
 	
 	// Update is called once per frame
 	void Update () {
        if (moveTutorial) {
             tutorialText.text = moveText;
+            moveTutorial = FadeAfterDelay();
+       } else if (moveTutorial2) {
+            tutorialText.text = moveText2;
             if (Input.GetMouseButton(0)) {
                 fading = true;
             }
             if (fading) {
-                moveTutorial = FadeAfterDelay();
+                moveTutorial2 = FadeAfterDelay(true);
             }
-       } else if (waitingForCapture) {
-            tutorialText.text = "";
-            waitingForCapture = !player.IsBeingCaptured();
-       } else if (hideTutorial) {
-            tutorialText.text = hideText;
+       } else if (escapeTutorial) {
+            tutorialText.text = escapeText;
+            escapeTutorial = FadeAfterDelay(true);
+       } else if (escapeTutorial2) {
+            tutorialText.text = escapeText2;
+            escapeTutorial2 = FadeAfterDelay();
+       } else if (escapeTutorial3) {
+            tutorialText.text = escapeText3;
             if (player.IsShadowing()) {
                 fading = true;
             }
             if (fading) {
-                hideTutorial = FadeAfterDelay();
+                escapeTutorial3 = FadeAfterDelay();
             }
        } else if (waitingForReject) {
             tutorialText.text = "";
@@ -77,19 +98,29 @@ public class TutorialManager : MonoBehaviour {
                 fading = true;
             }
             if (fading) {
-                cooldownTutoriel = FadeAfterDelay();
+                cooldownTutoriel = FadeAfterDelay(true);
             }
+       } else if (waitingForCapture) {
+            tutorialText.text = "";
+            waitingForCapture = !player.IsBeingCaptured();
+       } else if (hideTutorial) {
+            tutorialText.text = hideText;
+            hideTutorial = FadeAfterDelay();
        } else {
             tutorialText.text = "";
+            gameObject.SetActive(false);
        }
 	}
 
-    bool FadeAfterDelay () {
+    bool FadeAfterDelay (bool longDelayNext = false) {
         if (fadingTime > 0) {
             fadingTime -= Time.deltaTime;
             return true;
         }
         fadingTime = fadingDelay;
+        if (longDelayNext) {
+            fadingTime *= 3;
+        }
         fading = false;
         return false;
     }
