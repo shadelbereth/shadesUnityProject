@@ -13,15 +13,15 @@ public class LightOrShadeDetection : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, player.transform.position - transform.position, out hit, 10f)) {
-            if (player.transform == hit.collider.transform) {
+        if (Physics.Raycast(transform.position, player.position - transform.position, out hit, 10f)) {
+            if (player == hit.collider.transform) {
                 player.GetComponent<PlayerManager>().DetectLight();
             } else {
-                Transform lastHit = hit.collider.transform;
-                float distance = Vector3.Distance(transform.position, lastHit.position);
-                if (Physics.Raycast(lastHit.position, player.transform.position - lastHit.position, out hit, 10f - distance) && player.transform == hit.collider.transform) {
-                    player.GetComponent<PlayerManager>().ActualShade(lastHit, transform);
-                }
+                // Transform lastHit = hit.collider.transform;
+                // float distance = Vector3.Distance(transform.position, lastHit.position);
+                // if (Physics.Raycast(lastHit.position, player.transform.position - lastHit.position, out hit, 10f - distance) && player.transform == hit.collider.transform) {
+                //     player.GetComponent<PlayerManager>().ActualShade(lastHit, transform);
+                // }
             }
         }
 	}
