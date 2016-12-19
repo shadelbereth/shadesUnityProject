@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour {
     bool shadowing;
     bool lighting;
     bool passingWall;
+    public bool imprisoned;
     bool alive;
     // bool following;
     float recentDetection;
@@ -125,6 +126,10 @@ public class PlayerManager : MonoBehaviour {
         recentDetection = Time.deltaTime;
     }
 
+    public void DetectImprisoning (bool imprisoned) {
+        this.imprisoned = imprisoned;
+    }
+
     public void ActualShade (Transform shade, Transform light) {
     //     if (shadeFollowed == null || Vector3.Distance(transform.position, light.position) <= Vector3.Distance(transform.position, projectingLight.position) || Vector3.Distance(transform.position, shade.position) <= Vector3.Distance(transform.position, shadeFollowed.position)) {
     //         shadeFollowed = shade;
@@ -155,6 +160,10 @@ public class PlayerManager : MonoBehaviour {
 
     public bool IsBeingCaptured () {
         return capturing > 0;
+    }
+
+    public bool IsImprisoned () {
+        return imprisoned;
     }
 
     public bool IsAlive () {

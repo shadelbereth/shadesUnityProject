@@ -45,7 +45,7 @@ public class AIWatchman : MonoBehaviour {
         Vector3 facing = transform.TransformDirection(Vector3.forward);
         chasing = false;
         if (Physics.Raycast(transform.position, player.position - transform.position, out hit)) {
-            if (player == hit.collider.transform && Vector3.Angle(facing, player.position - transform.position) <= 180 && !player.GetComponent<PlayerManager>().IsShadowing()) {
+            if (player == hit.collider.transform && Vector3.Angle(facing, player.position - transform.position) <= 180 && !player.GetComponent<PlayerManager>().IsShadowing() && !player.GetComponent<PlayerManager>().IsImprisoned()) {
                 chasing = true;
                 losing = false;
             }
