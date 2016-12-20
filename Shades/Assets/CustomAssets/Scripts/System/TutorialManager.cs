@@ -16,6 +16,8 @@ public class TutorialManager : MonoBehaviour {
     public bool lightRejectTutorial = true;
     bool waitingForCooldown;
     public bool cooldownTutoriel = true;
+    bool keypassFound;
+    bool nothingFound;
     string moveText;
     string moveText2;
     string escapeText;
@@ -24,6 +26,8 @@ public class TutorialManager : MonoBehaviour {
     string hideText;
     string lightRejectText;
     string cooldownText;
+    string keypassFoundText;
+    string nothingFoundText;
 
     public float fadingDelay = 1f;
     PlayerManager player;
@@ -32,7 +36,7 @@ public class TutorialManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-       player = GameObject.FindWithTag("Player").GetComponent<PlayerManager>();
+       player = GameObject.Find("Player").GetComponent<PlayerManager>();
        fading = false;
        fadingTime = fadingDelay * 3;
        moveTutorial2 = moveTutorial;
@@ -49,6 +53,8 @@ public class TutorialManager : MonoBehaviour {
        lightRejectText = "IT HURTS! THE LIGHT HURTS!";
        cooldownText = "TURNING SHADE IS EXHAUSTING, IT TAKES TIME TO DO IT AGAIN. ESPECIALLY WHEN THE LIGHT HAS EJECTED ME.";
        hideText = "NO, THEY WON'T CAPTURE ME AGAIN! I MUST RUN INTO THE SHADE.";
+       keypassFoundText = "OH! THERE IS A KEYPASS HERE, I'LL HAVE NO MORE PROBLEM TO OPEN DOORS.";
+       nothingFoundText = "THERE IS NOTHING OF INTEREST HERE.";
 	}
 	
 	// Update is called once per frame
@@ -108,20 +114,36 @@ public class TutorialManager : MonoBehaviour {
             hideTutorial = FadeAfterDelay();
        } else {
             tutorialText.text = "";
-            gameObject.SetActive(false);
+       }
+       if (nothingFound) {
+        tutorialText.text = nothingFoundText;
+        nothingFound = FadeAfterDelay();
+       }
+       if (keypassFound) {
+        tutorialText.text = keypassFoundText;
+        keypassFound = FadeAfterDelay();
        }
 	}
 
-    bool FadeAfterDelay (bool longDelayNext = false) {
-        if (fadingTime > 0) {
-            fadingTime -= Time.deltaTime;
-            return true;
-        }
-        fadingTime = fadingDelay;
-        if (longDelayNext) {
-            fadingTime *= 3;
-        }
-        fading = false;
-        return false;
+  bool FadeAfterDelay (bool longDelayNext = false) {
+      if (fadingTime > 0) {
+          fadingTime -= Time.deltaTime;
+          return true;
+      }
+      fadingTime = fadingDelay;
+      if (longDelayNext) {
+          fadingTime *= 3;
+      }
+      fading = false;
+      return false;
+  }
+
+  public void SnoopingResult (bool result) {
+    fadingTime *= 3;
+    if (result) {
+      keypassFound = true;
+    } else {
+      nothingFound = true;
     }
+  }
 }

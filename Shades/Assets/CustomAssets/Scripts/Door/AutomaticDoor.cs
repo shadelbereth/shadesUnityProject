@@ -22,14 +22,14 @@ public class AutomaticDoor : MonoBehaviour {
 	}
 
     void OnTriggerStay (Collider other) {
-        if (other.tag == "Ennemy") {
+        if (other.tag == "Ennemy" || (other.tag == "Player" && other.GetComponent<PlayerManager>().HavePasskey())) {
             anim.SetBool("opened", true);
             detectTime = 1f;
         }
     }
 
     void OnTriggerEnter (Collider other) {
-        if (other.tag == "Ennemy") {
+        if (other.tag == "Ennemy" || (other.tag == "Player" && other.GetComponent<PlayerManager>().HavePasskey())) {
             anim.SetBool("opened", true);
             detectTime = 1f;
         }

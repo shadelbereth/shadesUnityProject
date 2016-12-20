@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour {
     bool passingWall;
     public bool imprisoned;
     bool alive;
+    bool passkey;
     // bool following;
     float recentDetection;
     float recentPassing;
@@ -33,6 +34,7 @@ public class PlayerManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
        alive = true;
+       passkey = false;
        burning = 0;
        cooldown = 0;
        capturing = 0;
@@ -130,6 +132,10 @@ public class PlayerManager : MonoBehaviour {
         this.imprisoned = imprisoned;
     }
 
+    public void GainPasskey () {
+        passkey = true;
+    }
+
     public void ActualShade (Transform shade, Transform light) {
     //     if (shadeFollowed == null || Vector3.Distance(transform.position, light.position) <= Vector3.Distance(transform.position, projectingLight.position) || Vector3.Distance(transform.position, shade.position) <= Vector3.Distance(transform.position, shadeFollowed.position)) {
     //         shadeFollowed = shade;
@@ -164,6 +170,10 @@ public class PlayerManager : MonoBehaviour {
 
     public bool IsImprisoned () {
         return imprisoned;
+    }
+
+    public bool HavePasskey () {
+        return passkey;
     }
 
     public bool IsAlive () {
