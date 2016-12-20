@@ -17,6 +17,7 @@ public class AIWatchman : MonoBehaviour {
     bool lastSeen;
     float lookingFor;
     float hiting;
+    float doorCollisionTime;
 
 	// Use this for initialization
 	void Start () {
@@ -37,6 +38,7 @@ public class AIWatchman : MonoBehaviour {
        lastSeen = false;
        lookingFor = 0;
        hiting = 0;
+       doorCollisionTime = 0;
 	}
 	
 	// Update is called once per frame
@@ -83,6 +85,9 @@ public class AIWatchman : MonoBehaviour {
         if (hiting > 0) {
             hiting -= Time.deltaTime;
         }
+        if (doorCollisionTime > 0) {
+        	doorCollisionTime -= Time.deltaTime;
+        }
 	}
 
     IEnumerator LookingFor() {
@@ -101,6 +106,13 @@ public class AIWatchman : MonoBehaviour {
             if (other.transform == lastKnownPosition && lookingFor <= 0) {
                 lastSeen = true;
             }
+        } else if (other.transform == lastTarget) {
+            Transform destination = SelectDestination();
+            while (destination == lastTarget) {
+                destination = SelectDestination();
+            }
+            controller.target = destination;
+            lastTarget = destination;
         }
     }
 
@@ -121,19 +133,24 @@ public class AIWatchman : MonoBehaviour {
 
     void OnCollisionEnter (Collision other) {
         if (other.gameObject.tag == "Player") {
-            if (hiting <= 0) {
-                hiting = 1f;
-                player.GetComponent<PlayerManager>().Hurt();
-            }
+            HitPlayer();
+        } else if (other.gameObject.tag == "Ennemy") {
+        	SelectDestination();
         }
     }
 
     void OnCollisionStay (Collision other) {
         if (other.gameObject.tag == "Player") {
-            if (hiting <= 0) {
-                hiting = 1f;
-                player.GetComponent<PlayerManager>().Hurt();
-            }
+            HitPlayer();
+        } else if (other.gameObject.tag == "Ennemy") {
+        	SelectDestination();
+        }
+    }
+
+    void HitPlayer () {
+        if (hiting <= 0) {
+            hiting = 1f;
+            player.GetComponent<PlayerManager>().Hurt();
         }
     }
 
