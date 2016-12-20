@@ -29,7 +29,7 @@ public class PasskeyHiding : MonoBehaviour {
 
 	void OnMouseEnter () {
 		if (!player.IsShadowing()) {
-			GetComponent<MeshRenderer>().materials[0].SetColor("_EmissionColor", Color.Lerp(Color.black, Color.white, Mathf.PingPong(Time.time, 1)));
+			GetComponent<MeshRenderer>().materials[0].SetColor("_EmissionColor", new Color(0.7f, 0.7f,0.7f));
 		}
 	}
 

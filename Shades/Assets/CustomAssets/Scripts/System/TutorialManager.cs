@@ -46,10 +46,10 @@ public class TutorialManager : MonoBehaviour {
        waitingForReject = lightRejectTutorial;
        waitingForCooldown = cooldownTutoriel;
        moveText = "WHERE AM I? I DON'T RECOGNIZE THIS PLACE.";
-       moveText2 = "[ TO MOVE KEEP MOUSE LEFT BUTTON DOWN ]";
+       moveText2 = "[ TO MOVE KEEP LEFT MOUSE BUTTON DOWN ]";
        escapeText = "IT LOOKS LIKE A PRISON. I COULD TRY TO BYPASS GUARDIANS THE NEXT TIME THEY COME IN...";
        escapeText2 = "... OR I COULD TRICK THEM WITH MY SPECIAL GIFT.";
-       escapeText3 = "[ TO TURN SHADE PRESS SPACE WHILE HIDING IN THE SHADE ]";
+       escapeText3 = "[ TO TURN SHADE PRESS SPACE WHILE HIDING IN THE DARK ]";
        lightRejectText = "IT HURTS! THE LIGHT HURTS!";
        cooldownText = "TURNING SHADE IS EXHAUSTING, IT TAKES TIME TO DO IT AGAIN. ESPECIALLY WHEN THE LIGHT HAS EJECTED ME.";
        hideText = "NO, THEY WON'T CAPTURE ME AGAIN! I MUST RUN INTO THE SHADE.";
